@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-ingress
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Ignore differences at the specified json pointers
+  ignoreDifferences:
+  - kind: Service
+    jsonPointers:
+    - /spec/clusterIP
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  project: default
+  source:
+    repoURL: https://github.com/helm/charts.git
+    targetRevision: HEAD
+    path: stable/nginx-ingress
+    helm:
+      parameters:
+      - name: "controller.autoscaling.enabled"
+        value: "false"
+      - name: "rbac.create"
+        value: "true"
+      - name: "controller.service.loadBalancerIP"
+        value: "10.100.200.178"
+      - name: 'controller.podAnnotations."traffic\.sidecar\.istio\.io/includeInboundPorts"'
+        value: ""
+      releaseName: nginx-ingress
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nginx-ingress

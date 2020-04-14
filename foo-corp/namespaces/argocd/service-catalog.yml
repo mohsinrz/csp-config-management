@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: service-catalog
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  ignoreDifferences:
+  - group: core
+    kind: Secret
+    name: service-catalog-catalog-apiserver-cert
+    namespace: service-catalog
+    jsonPointers:
+    - /data/tls.crt
+    - /data/tls.key
+  - group: apiregistration.k8s.io
+    kind: APIService
+    name: v1beta1.servicecatalog.k8s.io
+    jsonPointers:
+    - /spec/caBundle
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  project: default
+  source:
+    repoURL: https://svc-catalog-charts.storage.googleapis.com
+    targetRevision: 0.2.0
+    chart: catalog
+    helm:
+      parameters:
+      - name: "apiserver.storage.etcd.persistence.enabled"
+        value: "false"
+      - name: "image"
+        value: "quay.io/kubernetes-service-catalog/service-catalog:v0.2.1"
+      - name: "apiserver.replicas"
+        value: "1"
+      releaseName: service-catalog
+      valueFiles:
+      - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: service-catalog
