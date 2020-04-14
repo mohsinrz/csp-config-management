@@ -15,7 +15,4 @@ spec:
       - backend:
           serviceName: argocd-server
           servicePort: http
-    host: argocd.arctiqafan.anthos.labs.arctiq.test
-  tls:
-  - hosts:
-    - argocd.arctiqafan.anthos.labs.arctiq.test
+    host: argocd.example.com
