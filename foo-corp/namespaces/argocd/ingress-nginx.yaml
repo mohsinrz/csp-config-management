@@ -26,8 +26,6 @@ spec:
         value: "false"
       - name: "rbac.create"
         value: "true"
-      - name: 'controller.podAnnotations."traffic\.sidecar\.istio\.io/includeInboundPorts"'
-        value: ""
       releaseName: nginx-ingress
   destination:
     server: https://kubernetes.default.svc
