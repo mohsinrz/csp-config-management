@@ -26,8 +26,6 @@ spec:
         value: "false"
       - name: "rbac.create"
         value: "true"
-      - name: "controller.service.loadBalancerIP"
-        value: "10.100.200.178"
       - name: 'controller.podAnnotations."traffic\.sidecar\.istio\.io/includeInboundPorts"'
         value: ""
       releaseName: nginx-ingress
