@@ -15,4 +15,3 @@ spec:
       - backend:
           serviceName: argocd-server
           servicePort: http
-    host: argocd.example.com
